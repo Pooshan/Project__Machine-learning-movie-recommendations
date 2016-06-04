@@ -193,7 +193,8 @@ public class DataUtil {
         int count = newUArray.length-1;
         float highestRatedMovie = newUArray[count];
         boolean hasAlreadySeen = false;
-        while(!isMovieFound){
+        int counter = 0;
+        while(  counter < 2){
             int movieId = getMovieId(uArray, highestRatedMovie);
             hasAlreadySeen = false;
             for(Movie movie : user.getMovies()){
@@ -205,13 +206,27 @@ public class DataUtil {
                         break;
                     }
                 }
+
             }
-            if(!hasAlreadySeen) {
+            if(!hasAlreadySeen &&  counter < 2) {
+                Movie foundMovie = getMovie(movieId);
                 recommendedMovie = movieId;
-                isMovieFound = true;
+                counter++;
+                //isMovieFound = true;
+                user.addMovie(foundMovie);
+                System.out.print(" Recommended => "+recommendedMovie);
             }
         }
-        System.out.print(" Recommended => "+recommendedMovie);
+
+    }
+
+    private static Movie getMovie(int movieId) {
+        for(Movie movie : movies){
+            if(movie.getMovieID() == movieId){
+                return movie;
+            }
+        }
+        return null;
     }
 
     private static int getMovieId(float[] uArray, float highestRatedMovie) {
